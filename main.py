@@ -31,12 +31,12 @@ def agent(state:node)->node:
     message=[system]+[input]
     
     result=model.invoke(message)
-    print(result.content)
-    return state
-
-def marketAnalyst(state:node)->node:
-    return state
-
+    # print(result.content)
+    return {
+        "title":state['title'],
+        "description":state["description"],
+        "plan":result.content
+    }
 
 graph=StateGraph(node)
 graph.add_node("agent",agent)
@@ -48,5 +48,8 @@ app=graph.compile()
 
 
 input={"title":"MindCares","description":"A chatbot that takes care of your mental health, knows everythin about you and becomes you best friends","plan":""}
-app.invoke(input)
+results=app.invoke(input)
+
+with open("plan.txt","w") as f:
+    f.write(results['plan'])
 
