@@ -35,12 +35,11 @@ def getLinks(question:str)->str:
     search = GoogleSearch(params)
     results = search.get_dict()
 
-    # print(results)
-    return getText(results['organic_results'])
+    # # print(results)
     # with open('sampleLinks.txt','w') as f:
     #   f.write(str(results['organic_results']))
-    
-
-
-# question="market trends of ai in mental health"
+    return getText(results['organic_results'])
+      
+      
+# question="companies that are related to ai in mental health"
 # getLinks(question)

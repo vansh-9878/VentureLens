@@ -23,13 +23,8 @@ class node(TypedDict):
     
 def marketAnalyst(state:node)->node:
     print('Thinking..')
-    system=SystemMessage(content="""You are a Market analyst that searhes for market trends based on the plan given to you
-                         . Perform only the tasks of the market analyst and ignore others talk about the following
-                         - Market Size and Growth
-                         - Trends
-                         - Target audience analysis
-    You have been provided a tool which can help you search for the latest information make use of that whenever necessary
-    The output should just be a json and nothing else, the json should include market size, trends and targetAudience""")
+    system=SystemMessage(content="""You are a Competitor Scout Agent that does the work based on the plan given, dont do the work of others just focus on yours
+                         You have been given tools which can be used to access the internet, make use of it whenever needed""")
     
     plan=HumanMessage(content="Plan : "+state['plan'])
     message=[system,plan]+state['messages']
