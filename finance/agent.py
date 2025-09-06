@@ -21,12 +21,14 @@ class node(TypedDict):
     messages: Annotated[Sequence[BaseMessage],add_messages]
     plan:str
     
-def scout(state:node)->node:
+def finance(state:node)->node:
     print('Thinking..')
-    system=SystemMessage(content="""You are a Competitor Scout Agent that does the work based on the plan given, dont do the work of others just focus on yours
+    system=SystemMessage(content="""You are a Financial Modeler Agent that does the work based on the plan given, dont do the work of others just focus on yours
                          - You have been given tools which can be used to access the internet, make use of it whenever needed
-                         - Return all the information in json with no extra information
-                         - the json should include list of companies with their features, pricing, marketing strategies, and target audience, along with swot analysis""")
+                         - Return the answer in json with no extra information
+                         - Make sure to include numbers in the answer
+                         - Research the internet about other companies get some figures and then estimate
+                         - The json should contain revenue model, cost structure, funding requirements and key metrics""")
     
     plan=HumanMessage(content="Plan : "+state['plan'])
     message=[system,plan]+state['messages']
@@ -47,7 +49,7 @@ def checkCondition(state: node) -> str:
 
 
 graph=StateGraph(node)
-graph.add_node("market",scout)
+graph.add_node("market",finance)
 graph.add_node("tool",ToolNode(tools))
 graph.add_edge(START,"market")
 graph.add_conditional_edges(
