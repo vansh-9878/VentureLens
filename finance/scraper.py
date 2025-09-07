@@ -9,7 +9,11 @@ load_dotenv()
 
 def getText(results)->str:
   answer=""
+  count=0
   for i in results:
+    if count==3:
+      break
+    count+=1
     # link="https://www.grandviewresearch.com/industry-analysis/ai-mental-health-market-report"
     link=i['link']
     response=requests.get(link)
@@ -23,7 +27,7 @@ def getText(results)->str:
 
 @tool
 def getLinks(question:str)->str:
-    """Searches the internet for relevant content based on the question"""
+    """Searches the internet for relevant financial content based on the question"""
     print("question : ",question)
     params = {
       "engine": "google_light",
