@@ -26,6 +26,8 @@ An AI-powered Startup Feasibility Checker service that evaluates startup ideas u
    - **Financial Modeler**: Budget, runway, revenue projections
 3. **Synthesizer Agent**: Combines outputs into final feasibility verdict
 
+<img width="681" height="537" alt="image" src="https://github.com/user-attachments/assets/104ca71f-7df7-453f-8ab1-8ec70bcac362" />
+
 ---
 
 ## 🛠️ Tech Stack
