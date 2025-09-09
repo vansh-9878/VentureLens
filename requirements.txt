@@ -1,10 +1,8 @@
-langchain_google_genai
-python-dotenv
-re
-operator
-langchain_core
+langchain-google-genai
+langchain-core
 langgraph
 pydantic
+python-dotenv
 uvicorn
 fastapi
 ddgs
