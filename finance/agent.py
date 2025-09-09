@@ -12,7 +12,7 @@ load_dotenv()
 tools=[getLinks]
 
 model=ChatGoogleGenerativeAI(
-    model="gemini-1.5-pro",
+    model="gemini-2.5-flash",
     api_key=os.getenv("GEMINI_API")
 ).bind_tools(tools)
 
@@ -28,7 +28,30 @@ def finance(state:node)->node:
                          - Use the tool to search about other companies get some figures and then estimate
                          - Return the answer in json with no extra information
                          - Make sure to include numbers in the answer and that should be in rupees
-                         - The json should contain revenue model, cost structure, funding requirements and key metrics""")
+the json should be of the following format:
+    {
+      revenue_model: {
+        freemium: string,
+        subscription: string,
+        partnerships: string
+      },
+      cost_structure: {
+        development: string,
+        marketing: string,
+        operational: string,
+        cac: string
+      },
+      funding_requirements: {
+        seed_round: string,
+        potential_sources: string
+      },
+      key_metrics: {
+        user_growth: string,
+        retention_rate: string,
+        cac_payback: string,
+        customer_lifetime_value: string
+      }
+    },""")
     
     plan=HumanMessage(content="Plan : "+state['plan'])
     message=[system,plan]+state['messages']

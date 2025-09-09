@@ -12,7 +12,7 @@ load_dotenv()
 tools=[getLinks]
 
 model=ChatGoogleGenerativeAI(
-    model="gemini-1.5-pro",
+    model="gemini-2.5-flash",
     api_key=os.getenv("GEMINI_API")
 ).bind_tools(tools)
 
@@ -30,7 +30,13 @@ def marketAnalyst(state:node)->node:
                          - Trends
                          - Target audience analysis
     You have been provided a tool which can help you search for the latest information make use of that whenever necessary
-    The output should just be a json and nothing else, the json should include market size, trends and targetAudience""")
+    the output should be in json in the following format and no other information other than this, fill this based on the data you get from the tool:
+        {
+      marketSize: string,
+      trends: [],
+      targetAudience: string
+    },
+""")
     
     plan=HumanMessage(content="Plan : "+state['plan'])
     message=[system,plan]+state['messages']

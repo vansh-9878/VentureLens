@@ -7,13 +7,34 @@ from finance.agent import start as startFinance
 from marketAnalyst.agent import start as startMarket
 from swotAgent.agent import start as startSwot 
 from operator import add
+import re
 import json
 import os;
 from dotenv import load_dotenv
 load_dotenv()
 
+
+def safe_json_loads(text: str):
+    """
+    Try to clean and parse JSON safely from LLM output.
+    """
+    # Remove code fences like ```json ... ```
+    cleaned = re.sub(r"```(?:json)?", "", text).strip()
+
+    try:
+        return json.loads(cleaned)
+    except json.JSONDecodeError as e:
+        print("JSON decode error:", e)
+        # Attempt to fix bad escape sequences
+        cleaned = cleaned.replace("\\", "\\\\")
+        try:
+            return json.loads(cleaned)
+        except:
+            return {"error": "Invalid JSON", "raw": cleaned}
+
+
 model=ChatGoogleGenerativeAI(
-    model="gemini-1.5-pro",
+    model="gemini-2.5-flash",
     api_key=os.getenv("GEMINI_API")
 )
 
@@ -31,7 +52,7 @@ def planner(state:node)->node:
     2) Competitor Searcher that searches for similar companies
     3) Merits and demerits provider
     4) Financial Modeler that creates the estimated financial requirements
-    These are the agents and their tasks. Your plan should include details that will help them in doing their tasks based on the user's input
+    These are the agents and their tasks. Your plan should include details that will help them in doing their tasks based on the user's input and specify them to use Rupees as the currency
     """)
     
     input=f"Title : {state['title']} , Description : {state['description']}"
@@ -72,13 +93,41 @@ def swot(state:node)->node:
 
 def merger(state:node)->node:
     print("merging..")
-    # system="""You are an assistant that takes in multiple different jsons and combine them into a single json such that no data is lost"""
-    # messages=[system]+state['output']
-    # results=model.invoke(messages)
+    system="""You are an assistant that takes in multiple different jsons and return feasibility score in percentage for each
+    - return a json with the feasibility scores of each json and one overall score
+    the output should be in the following format:
+        {
+      scores: {
+        competitor_analysis: ,
+        business_model: ,
+        market_analysis: ,
+        risk_mitigation:
+      },
+      overallScore: ,
+      explanation: {
+        competitor_analysis: "",
+        business_model: "",
+        market_analysis: "",
+        risk_mitigation: "",
+        overallScore:""
+      }
+    }"""
+    messages=[system]+state['output']
+    results=model.invoke(messages)
     # print(results.content)
-    print(state['output'])
-    results=[json.loads(i.replace('json',"").replace("```","")) for i in state['output']]
-    print(results)
+    # print(state['output'])
+    
+    state['output']+=[results.content]
+    
+    results=[safe_json_loads(i) for i in state['output']]
+    # print(results)
+    # if(results[-1].error):
+    #     match = re.search(r'\{.*\}', results[-1]["raw"], re.DOTALL)
+    #     if match:
+    #         json_str = match.group(0)  # this is the valid JSON portion
+    #         ans = json.loads(json_str)
+    #         results[-1]=ans
+            
     return{
         "title": state['title'],
         "description": state['description'],

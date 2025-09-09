@@ -12,7 +12,7 @@ load_dotenv()
 tools=[getLinks]
 
 model=ChatGoogleGenerativeAI(
-    model="gemini-1.5-pro",
+    model="gemini-2.5-flash",
     api_key=os.getenv("GEMINI_API")
 ).bind_tools(tools)
 
@@ -26,8 +26,24 @@ def swot(state:node)->node:
     system=SystemMessage(content="""You are a Merits and Demerits Provider Agent that does the work based on the plan given, dont do the work of others just focus on yours
                          STRICT RULE: Before generating any output, you MUST call the tool to fetch up-to-date financial or industry data about the company in question. 
                          - You have been given tools which can be used to access the internet, make use of it whenever needed
+                         - Limit the number of demerits to max 6
                          - Return the answer in json with no extra information
-                         - The json should contain merits and demerits and possible ways to counter demerits""")
+ The json should be in the following format:
+    {
+      merits: [
+        {
+          merit: string,
+          description: string
+        },
+      ],
+      demerits: [
+        {
+          demerit: string,
+          description: string,
+          counter_measure: string
+        },
+      ]
+    },""")
     
     plan=HumanMessage(content="Plan : "+ str(state['plan']))
     message=[system,plan]+state['messages']

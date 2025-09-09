@@ -12,7 +12,7 @@ load_dotenv()
 tools=[getLinks]
 
 model=ChatGoogleGenerativeAI(
-    model="gemini-1.5-pro",
+    model="gemini-2.5-flash",
     api_key=os.getenv("GEMINI_API")
 ).bind_tools(tools)
 
@@ -26,8 +26,23 @@ def scout(state:node)->node:
     system=SystemMessage(content="""You are a Competitor Scout Agent that does the work based on the plan given, dont do the work of others just focus on yours
                          STRICT RULE: Before generating any output, you MUST call the tool to fetch up-to-date financial or industry data about the company in question. 
                          - You have been given tools which can be used to access the internet, make use of it whenever needed
+                         - Limit the number of competitors to 4
                          - Return all the information in json with no extra information
-                         - the json should include list of companies with their features, pricing, marketing strategies, and target audience, along with swot analysis""")
+                         - the json format should be as follows, fill this based on the data you get from the tool:
+    {companies: [
+        {
+          name: string,
+          features: [],
+          pricing: [],
+          marketing_strategies: [],
+          target_audience: [],
+          swot: {
+            strengths: [],
+            weaknesses: [],
+            opportunities: [],
+            threats: []
+          }
+        }]},""")
     
     plan=HumanMessage(content="Plan : "+state['plan'])
     message=[system,plan]+state['messages']
