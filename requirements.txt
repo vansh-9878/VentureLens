@@ -1,0 +1,12 @@
+langchain_google_genai
+python-dotenv
+re
+operator
+langchain_core
+langgraph
+pydantic
+uvicorn
+fastapi
+ddgs
+beautifulsoup4
+requests

@@ -1,4 +1,4 @@
-from serpapi import GoogleSearch
+# from serpapi import GoogleSearch
 import os
 from dotenv import load_dotenv
 from ddgs import DDGS
