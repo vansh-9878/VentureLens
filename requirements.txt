@@ -9,3 +9,4 @@ ddgs
 beautifulsoup4
 requests
 jwt
+slowapi
