@@ -8,5 +8,5 @@ fastapi
 ddgs
 beautifulsoup4
 requests
-jwt
+PyJWT
 slowapi
